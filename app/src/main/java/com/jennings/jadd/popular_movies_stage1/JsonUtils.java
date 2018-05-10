@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class JsonUtils {
 
     private static ArrayList<Object> movieObjects;
-
+    private static String imagePath = "http://image.tmdb.org/t/p/w185//";
     private static ArrayList<Object> convertJSONArrayToList(JSONArray jsonArray) throws JSONException{
         ArrayList<Object> retList = new ArrayList<>();
         for (int i = 0; i<jsonArray.length();i++) {
@@ -70,7 +70,7 @@ public class JsonUtils {
 
         String poster_path = "";
         if(js.has("poster_path"))
-            poster_path=js.getString("poster_path");
+            poster_path = imagePath.concat(js.getString("poster_path"));
 
         String overview = "";
         if(js.has("overview"))

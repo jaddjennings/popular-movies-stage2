@@ -29,6 +29,7 @@ public class MovieObject {
         this.popularity = popularity;
         this.overview = overview;
         this.release_date = release_date;
+        this.posterPath = poster_path;
     }
 
     public MovieObject(int vote_count, int id, Boolean video, double vote_average, String title, double popularity, String posterPath, String original_language, String original_title, ArrayList<Object> genre_ids, String backdrop_path, Boolean adult, String overview, String release_date) {

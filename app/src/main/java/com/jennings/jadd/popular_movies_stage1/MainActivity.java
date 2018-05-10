@@ -1,11 +1,15 @@
 package com.jennings.jadd.popular_movies_stage1;
 
+import android.content.Context;
+import android.graphics.Point;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.View;
-import android.widget.ImageView;
-import com.squareup.picasso.Picasso;
+import android.widget.LinearLayout;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,26 +18,23 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Object> movieResultsJson;
-    private String imagePath = "http://image.tmdb.org/t/p/w185//";
+
+    private RecyclerView movieList;
+    private MoviePosterAdapter mvAdapter;
+    private Context mnContext;
+    private LinearLayout imgHolder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mnContext = this;
+        movieList = (RecyclerView) findViewById(R.id.rv_movies);
+        movieList.setLayoutManager(new GridLayoutManager(mnContext, 2));
 
-        //ImageView ingredientsIv = findViewById(R.id.image_iv);
+        mvAdapter = new MoviePosterAdapter(mnContext);
 
-        /**TODO: create Array Adapter for Grid Layout**/
-
-       /** Picasso.with(this)
-                .load(imagePath.concat("nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg"))
-                .into(ingredientsIv);
-
-        ingredientsIv = findViewById(R.id.image_iv2);
-        Picasso.with(this)
-                .load("http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg ")
-                .into(ingredientsIv);
-
-**/
+        movieList.setHasFixedSize(true);
+        movieList.setAdapter(mvAdapter);
 
         URL movierequest = NetworkUtils.buildUrl();
         new MovieQueryTask().execute(movierequest);
@@ -41,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
     public class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
-            // COMPLETED (26) Override onPreExecute to set the loading indicator to visible
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -63,18 +63,22 @@ public class MainActivity extends AppCompatActivity {
                     movieResultsJson = JsonUtils.getMovieObjects(MovieSearchResults);
 
                 }
+
+
                 return MovieSearchResults;
             }
 
             @Override
             protected void onPostExecute(String MovieSearchResults) {
-
                 if (MovieSearchResults != null && !MovieSearchResults.equals("")) {
                     // COMPLETED (17) Call showJsonDataView if we have valid, non-null results
 
                     movieResultsJson = JsonUtils.getMovieObjects(MovieSearchResults);
 
                 }
+                mvAdapter.setMovieList(movieResultsJson);
+                mvAdapter.notifyDataSetChanged();
+
             }
 
     }
