@@ -1,6 +1,8 @@
-package com.jennings.jadd.popular_movies_stage1;
+package com.jennings.jadd.popular_movies_stage1.Utilities;
 
 import android.net.Uri;
+
+import com.jennings.jadd.popular_movies_stage1.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;

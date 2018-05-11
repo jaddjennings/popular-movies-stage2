@@ -1,21 +1,23 @@
 package com.jennings.jadd.popular_movies_stage1;
 
 import android.content.Context;
-import android.graphics.Point;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
-import android.view.View;
 import android.widget.LinearLayout;
+
+import com.jennings.jadd.popular_movies_stage1.Utilities.JsonUtils;
+import com.jennings.jadd.popular_movies_stage1.Utilities.NetworkUtils;
+import com.jennings.jadd.popular_movies_stage1.models.MovieObject;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoviePosterAdapter.ListItemClickListener {
 
     private ArrayList<Object> movieResultsJson;
 
@@ -31,13 +33,23 @@ public class MainActivity extends AppCompatActivity {
         movieList = (RecyclerView) findViewById(R.id.rv_movies);
         movieList.setLayoutManager(new GridLayoutManager(mnContext, 2));
 
-        mvAdapter = new MoviePosterAdapter(mnContext);
+        mvAdapter = new MoviePosterAdapter(mnContext, this);
 
         movieList.setHasFixedSize(true);
         movieList.setAdapter(mvAdapter);
 
         URL movierequest = NetworkUtils.buildUrl();
         new MovieQueryTask().execute(movierequest);
+    }
+
+     @Override
+    public void onListItemClick(int clickedItemIndex) {
+        Context context = this;
+        Class destinationClass = DetailActivity.class;
+        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+        intentToStartDetailActivity.putExtra("intValue",clickedItemIndex);
+        intentToStartDetailActivity.putExtra("MovieObject",(MovieObject)movieResultsJson.get(clickedItemIndex));
+        startActivity(intentToStartDetailActivity);
     }
 
     public class MovieQueryTask extends AsyncTask<URL, Void, String> {

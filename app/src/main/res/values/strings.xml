@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">popular-movies-stage1</string>
+    <string name="movie_title">Title:</string>
+    <string name="release_date">Date Of Release:</string>
+    <string name="movie_plot">Plot:</string>
+    <string name="vote_average">Vote Average:</string>
+    <string name="movie_title_label">Title:</string>
+    <string name="movie_release_date_tv_label">Release Date:</string>
+    <string name="vote_average_tv_label">Vote Average:</string>
+    <string name="movie_plot_label">Plot/Summary:</string>
 
 </resources>

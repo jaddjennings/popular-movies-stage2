@@ -1,8 +1,11 @@
-package com.jennings.jadd.popular_movies_stage1;
+package com.jennings.jadd.popular_movies_stage1.models;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class MovieObject {
+public class MovieObject implements Parcelable{
 
 
     private int vote_count;
@@ -31,23 +34,16 @@ public class MovieObject {
         this.release_date = release_date;
         this.posterPath = poster_path;
     }
+    private MovieObject(Parcel in) {
+        this.title = in.readString();
+        this.overview = in.readString();
+        this.release_date = in.readString();
+        this.posterPath = in.readString();
+        this.vote_average = in.readDouble();
+        this.popularity = in.readDouble();
 
-    public MovieObject(int vote_count, int id, Boolean video, double vote_average, String title, double popularity, String posterPath, String original_language, String original_title, ArrayList<Object> genre_ids, String backdrop_path, Boolean adult, String overview, String release_date) {
-        this.vote_count = vote_count;
-        this.id = id;
-        this.video = video;
-        this.vote_average = vote_average;
-        this.title = title;
-        this.popularity = popularity;
-        this.posterPath = posterPath;
-        this.original_language = original_language;
-        this.original_title = original_title;
-        this.genre_ids = genre_ids;
-        this.backdrop_path = backdrop_path;
-        this.adult = adult;
-        this.overview = overview;
-        this.release_date = release_date;
     }
+
     public int getVote_count() {
         return vote_count;
     }
@@ -160,8 +156,48 @@ public class MovieObject {
         this.release_date = release_date;
     }
 
+    public static final Parcelable.Creator<MovieObject> CREATOR
+     = new Parcelable.Creator<MovieObject>() {
 
+              public  MovieObject createFromParcel(Parcel in) {
+                    return new MovieObject(in);
+                }
 
+               public     MovieObject[] newArray(int size) {
+                    return new MovieObject[size];
+                }
+    };
 
+    /**
+     * Describe the kinds of special objects contained in this Parcelable
+     * instance's marshaled representation. For example, if the object will
+     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
+     * the return value of this method must include the
+     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
+     *
+     * @return a bitmask indicating the set of special object types marshaled
+     * by this Parcelable object instance.
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    /**
+     * Flatten this object in to a Parcel.
+     *
+     * @param dest  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.title);
+        dest.writeString(this.overview);
+        dest.writeString(this.release_date);
+        dest.writeString(this.posterPath);
+        dest.writeDouble(this.vote_average);
+        dest.writeDouble(this.popularity);
+
+    }
 }

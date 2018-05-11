@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.jennings.jadd.popular_movies_stage1.models.MovieObject;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,20 +22,16 @@ public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter
     private Context mnActivity;
     private String imagePath;
     private ArrayList<Object> movieList;
+    final private ListItemClickListener mOnClickListener;
 
-    public MoviePosterAdapter(int numberOfMovies, Context main, String imgPath){
-        mMoviePosterItems= numberOfMovies;
-        mnActivity = main;
-        imagePath = imgPath;
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
     }
-    public MoviePosterAdapter( Context main, ArrayList<Object> movies){
-        mMoviePosterItems= movies.size();
-        mnActivity = main;
-        movieList = movies;
-    }
-    public MoviePosterAdapter( Context main){
+
+    public MoviePosterAdapter( Context main, ListItemClickListener listener){
         mMoviePosterItems= 0;
         mnActivity = main;
+        mOnClickListener = listener;
     }
 
     public void setMovieList(ArrayList<Object> movies){
@@ -66,21 +63,25 @@ public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter
     /**
      * Cache of the children views for a list item.
      */
-    class MoviePosterViewHolder extends RecyclerView.ViewHolder {
+    class MoviePosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         // Will display the position in the list, ie 0 through getItemCount() - 1
         ImageView listItemMoviePosterView;
 
+        public void onClick(View view){
+            int clickedPosition = getAdapterPosition();
+            mOnClickListener.onListItemClick(clickedPosition);
+        }
         public MoviePosterViewHolder(View itemView) {
             super(itemView);
-
             listItemMoviePosterView = (ImageView) itemView.findViewById(R.id.image_movie_poster);
+            itemView.setOnClickListener(this);
         }
 
 
         void bind(int listIndex){
 
-             if(listIndex>0)
+             if(listIndex>=0)
                 Picasso.with(mnActivity)
                        .load(((MovieObject)movieList.get(listIndex)).getPosterPath())
                        .into(listItemMoviePosterView);
