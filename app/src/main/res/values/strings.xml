@@ -8,5 +8,8 @@
     <string name="movie_release_date_tv_label">Release Date:</string>
     <string name="vote_average_tv_label">Vote Average:</string>
     <string name="movie_plot_label">Plot/Summary:</string>
+    <string name="popular_movie">Sort by Most Popular</string>
+    <string name="sort_by_popular_movie">Sort by Most Popular</string>
+    <string name="sort_by_top_rated_movie">Sort by Top Rated</string>
 
 </resources>
