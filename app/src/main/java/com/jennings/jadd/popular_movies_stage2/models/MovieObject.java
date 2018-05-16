@@ -1,4 +1,4 @@
-package com.jennings.jadd.popular_movies_stage1.models;
+package com.jennings.jadd.popular_movies_stage2.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

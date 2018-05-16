@@ -1,7 +1,7 @@
-package com.jennings.jadd.popular_movies_stage1.Utilities;
+package com.jennings.jadd.popular_movies_stage2.Utilities;
 
 
-import com.jennings.jadd.popular_movies_stage1.models.MovieObject;
+import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;

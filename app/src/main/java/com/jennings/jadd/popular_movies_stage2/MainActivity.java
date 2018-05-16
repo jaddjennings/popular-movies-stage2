@@ -1,4 +1,4 @@
-package com.jennings.jadd.popular_movies_stage1;
+package com.jennings.jadd.popular_movies_stage2;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,15 +15,15 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.jennings.jadd.popular_movies_stage1.Utilities.JsonUtils;
-import com.jennings.jadd.popular_movies_stage1.Utilities.NetworkUtils;
-import com.jennings.jadd.popular_movies_stage1.models.MovieObject;
+import com.jennings.jadd.popular_movies_stage2.Utilities.JsonUtils;
+import com.jennings.jadd.popular_movies_stage2.Utilities.NetworkUtils;
+import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements MoviePosterAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements com.jennings.jadd.popular_movies_stage2.MoviePosterAdapter.ListItemClickListener {
 
     private ArrayList<Object> movieResultsJson;
 

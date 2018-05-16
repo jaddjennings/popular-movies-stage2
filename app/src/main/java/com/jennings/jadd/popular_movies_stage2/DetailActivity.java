@@ -1,4 +1,4 @@
-package com.jennings.jadd.popular_movies_stage1;
+package com.jennings.jadd.popular_movies_stage2;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jennings.jadd.popular_movies_stage1.models.MovieObject;
+import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
