@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">popular-movies-stage1</string>
+    <string name="app_name">popular-movies-stage2</string>
     <string name="movie_title">Title:</string>
     <string name="release_date">Date Of Release:</string>
     <string name="movie_plot">Plot:</string>

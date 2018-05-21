@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements com.jennings.jadd.popular_movies_stage2.MoviePosterAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements MoviePosterAdapter.ListItemClickListener {
 
     private ArrayList<Object> movieResultsJson;
 

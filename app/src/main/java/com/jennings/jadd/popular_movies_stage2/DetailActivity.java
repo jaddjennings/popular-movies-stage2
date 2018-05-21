@@ -2,24 +2,53 @@ package com.jennings.jadd.popular_movies_stage2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
+import butterknife.BindDrawable;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class DetailActivity extends AppCompatActivity {
 
-    private ImageView posterDetail;
+
+    @BindView(R.id.movie_title_tv) TextView tv_title;
+    @BindView(R.id.movie_plot) TextView tv_movie_plot;
+    @BindView(R.id.movie_release_date_tv) TextView tv_movie_release_date;
+    @BindView(R.id.vote_average) TextView tv_vote_average;
+    @BindView(R.id.image_movie_poster_detail) ImageView posterDetail;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        posterDetail = (ImageView) findViewById(R.id.image_movie_poster_detail);
+        ButterKnife.bind(this);
+     /**   ToggleButton toggle = new ToggleButton(this);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    toggle.setButtonDrawable(android.R.drawable.btn_star_big_on);
+                } else {
+                    toggle.setButtonDrawable(android.R.drawable.btn_star_big_off);
+                }
+            }
+        });
+        **/
+
+
+
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity == null) {
             closeOnError();
@@ -35,41 +64,47 @@ public class DetailActivity extends AppCompatActivity {
         loadUI(selectedMovie);
 
     }
+    @OnClick(R.id.imageButton)
+    public void toggleButton(ImageButton b) {
+        /**use persistent data to **/
+        if(b.getBackground().equals(android.R.drawable.btn_star_big_on))
+            b.setBackgroundResource(android.R.drawable.btn_star_big_off);
+        else
+            b.setBackgroundResource(android.R.drawable.btn_star_big_on);
+      }
     private void loadUI(MovieObject mvObj){
 
         Picasso.with(this)
                 .load(mvObj.getPosterPath())
                 .into(posterDetail);
 
-        TextView tv = (TextView)findViewById(R.id.movie_title_tv);
         if(mvObj.getTitle().isEmpty()){
-            tv.setText("N/A");
+            tv_title.setText("N/A");
         }
         else{
-            tv.setText(mvObj.getTitle());
+            tv_title.setText(mvObj.getTitle());
         }
-        tv = (TextView)findViewById(R.id.movie_plot);
+
         if(mvObj.getOverview().isEmpty()){
-            tv.setText("N/A");
+            tv_movie_plot.setText("N/A");
         }
         else{
-            tv.setText(mvObj.getOverview());
+            tv_movie_plot.setText(mvObj.getOverview());
         }
-        tv = (TextView)findViewById(R.id.movie_release_date_tv);
         if(mvObj.getRelease_date().isEmpty()){
-            tv.setText("N/A");
+            tv_movie_release_date.setText("N/A");
         }
         else{
-            tv.setText(mvObj.getRelease_date());
+            tv_movie_release_date.setText(mvObj.getRelease_date());
         }
-        tv = (TextView)findViewById(R.id.vote_average);
         if(String.valueOf(mvObj.getVote_average()).isEmpty() ){
-            tv.setText("N/A");
+            tv_vote_average.setText("N/A");
         }
         else{
-            tv.setText(String.valueOf(mvObj.getVote_average()));
+            tv_vote_average.setText(String.valueOf(mvObj.getVote_average()));
         }
     }
+
 
     private void closeOnError() {
         finish();
