@@ -8,7 +8,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -28,7 +28,8 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerCrop"
-                app:srcCompat="@android:drawable/btn_star_big_off" />
+                app:srcCompat="@android:drawable/btn_star_big_off"
+                android:contentDescription="TODO" />
 
     </RelativeLayout>
 

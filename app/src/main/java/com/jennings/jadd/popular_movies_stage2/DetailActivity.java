@@ -11,8 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.jennings.jadd.popular_movies_stage2.Utilities.MovieDetailQueryTask;
+import com.jennings.jadd.popular_movies_stage2.Utilities.MovieQueryTask;
+import com.jennings.jadd.popular_movies_stage2.Utilities.NetworkUtils;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 import com.squareup.picasso.Picasso;
+
+import java.net.URL;
 
 import butterknife.BindDrawable;
 import butterknife.BindView;
@@ -29,25 +34,13 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.vote_average) TextView tv_vote_average;
     @BindView(R.id.image_movie_poster_detail) ImageView posterDetail;
 
+    private int movieId;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-     /**   ToggleButton toggle = new ToggleButton(this);
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    toggle.setButtonDrawable(android.R.drawable.btn_star_big_on);
-                } else {
-                    toggle.setButtonDrawable(android.R.drawable.btn_star_big_off);
-                }
-            }
-        });
-        **/
-
-
 
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity == null) {
@@ -61,12 +54,18 @@ public class DetailActivity extends AppCompatActivity {
             closeOnError();
             return;
         }
+        movieId = selectedMovie.getId();
+        URL movieDetailReviews= NetworkUtils.buildUrlDetail(1,movieId);
+        new MovieDetailQueryTask(1).execute(movieDetailReviews);
+        URL movieDetailTrailers= NetworkUtils.buildUrlDetail(2,movieId);
+        new MovieDetailQueryTask(2).execute(movieDetailTrailers);
+        //new MovieQueryTask(movieResultsJson, mvAdapter).execute(movieRequest);
         loadUI(selectedMovie);
 
     }
     @OnClick(R.id.imageButton)
     public void toggleButton(ImageButton b) {
-        /**use persistent data to **/
+        /**todo:use persistent data to **/
         if(b.getBackground().equals(android.R.drawable.btn_star_big_on))
             b.setBackgroundResource(android.R.drawable.btn_star_big_off);
         else

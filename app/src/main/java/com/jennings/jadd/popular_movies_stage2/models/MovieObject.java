@@ -10,23 +10,18 @@ public class MovieObject implements Parcelable{
 
     private int vote_count;
     private int id;
-    private Boolean video;
     private double vote_average;
     private String title;
     private double popularity;
     private String posterPath;
-    private String original_language;
-    private String original_title;
-    private ArrayList<Object> genre_ids;
-    private String backdrop_path;
-    private Boolean adult;
     private String overview;
     private String release_date;
 
-    public MovieObject(){
 
+    public MovieObject(){
     }
-    public MovieObject(Double vote_average, String title, Double popularity, String poster_path, String overview, String release_date) {
+    public MovieObject(int id, Double vote_average, String title, Double popularity, String poster_path, String overview, String release_date) {
+        this.id =id;
         this.vote_average = vote_average;
         this.title = title;
         this.popularity = popularity;
@@ -35,6 +30,7 @@ public class MovieObject implements Parcelable{
         this.posterPath = poster_path;
     }
     private MovieObject(Parcel in) {
+        this.id = in.readInt();
         this.title = in.readString();
         this.overview = in.readString();
         this.release_date = in.readString();
@@ -60,13 +56,7 @@ public class MovieObject implements Parcelable{
         this.id = id;
     }
 
-    public Boolean getVideo() {
-        return video;
-    }
 
-    public void setVideo(Boolean video) {
-        this.video = video;
-    }
 
     public double getVote_average() {
         return vote_average;
@@ -98,46 +88,6 @@ public class MovieObject implements Parcelable{
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
-    }
-
-    public String getOriginal_language() {
-        return original_language;
-    }
-
-    public void setOriginal_language(String original_language) {
-        this.original_language = original_language;
-    }
-
-    public String getOriginal_title() {
-        return original_title;
-    }
-
-    public void setOriginal_title(String original_title) {
-        this.original_title = original_title;
-    }
-
-    public ArrayList<Object> getGenre_ids() {
-        return genre_ids;
-    }
-
-    public void setGenre_ids(ArrayList<Object> genre_ids) {
-        this.genre_ids = genre_ids;
-    }
-
-    public String getBackdrop_path() {
-        return backdrop_path;
-    }
-
-    public void setBackdrop_path(String backdrop_path) {
-        this.backdrop_path = backdrop_path;
-    }
-
-    public Boolean getAdult() {
-        return adult;
-    }
-
-    public void setAdult(Boolean adult) {
-        this.adult = adult;
     }
 
     public String getOverview() {
@@ -192,6 +142,7 @@ public class MovieObject implements Parcelable{
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
         dest.writeString(this.title);
         dest.writeString(this.overview);
         dest.writeString(this.release_date);

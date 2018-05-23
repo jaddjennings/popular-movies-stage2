@@ -38,6 +38,9 @@ public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter
         mMoviePosterItems= movies.size();
         movieList = movies;
     }
+    public ArrayList<Object> getMovieList(){
+        return movieList;
+    }
     public void onBindViewHolder(MoviePosterViewHolder holder, int position) {
         Log.d(TAG, "#" + position);
         holder.bind(position);

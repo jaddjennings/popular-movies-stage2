@@ -13,13 +13,26 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
+    final static String MOVIE_BASE_URL =
+            "http://api.themoviedb.org/3/movie"
+            ;
+
     final static String POP_MOVIE_BASE_URL =
-            "http://api.themoviedb.org/3/movie/popular"
+            "/popular"
             ;
 
     final static String TOP_MOVIE_BASE_URL =
-            "http://api.themoviedb.org/3/movie/top_rated"
+            "/top_rated"
             ;
+
+    final static String MOVIE_REVIEWS_URL_PART =
+            "/reviews"
+            ;
+
+    final static String MOVIE_TRAILERS_URL_PART =
+            "/videos"
+            ;
+
     final static String PARAM_API_KEY = "api_key";
 
     final static String api_key = BuildConfig.GoogleSecAPIKEY;
@@ -28,17 +41,43 @@ public class NetworkUtils {
     public static URL buildUrl(int sortBy) {
         Uri builtUri;
         if(sortBy==1){
-             builtUri = Uri.parse(POP_MOVIE_BASE_URL).buildUpon()
+             builtUri = Uri.parse(MOVIE_BASE_URL + POP_MOVIE_BASE_URL).buildUpon()
                     .appendQueryParameter(PARAM_API_KEY, api_key)
                     /**.appendQueryParameter(PARAM_SORT, sortBy)**/
                     .build();
         }
         else {
-             builtUri = Uri.parse(TOP_MOVIE_BASE_URL).buildUpon()
+             builtUri = Uri.parse(MOVIE_BASE_URL + TOP_MOVIE_BASE_URL).buildUpon()
                     .appendQueryParameter(PARAM_API_KEY, api_key)
                     /**.appendQueryParameter(PARAM_SORT, sortBy)**/
                     .build();
         }
+
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+    public static URL buildUrlDetail(int type, int movieId) {
+        Uri builtUri;
+        if(type==1){
+            builtUri = Uri.parse(MOVIE_BASE_URL + "/" + movieId  + MOVIE_REVIEWS_URL_PART).buildUpon()
+                    .appendQueryParameter(PARAM_API_KEY, api_key)
+                    /**.appendQueryParameter(PARAM_SORT, sortBy)**/
+                    .build();
+        }
+        else {
+            builtUri = Uri.parse(MOVIE_BASE_URL + "/" + movieId  + MOVIE_TRAILERS_URL_PART).buildUpon()
+                    .appendQueryParameter(PARAM_API_KEY, api_key)
+                    /**.appendQueryParameter(PARAM_SORT, sortBy)**/
+                    .build();
+        }
+
 
         URL url = null;
         try {

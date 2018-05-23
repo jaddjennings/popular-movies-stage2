@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.jennings.jadd.popular_movies_stage2.Utilities.JsonUtils;
+import com.jennings.jadd.popular_movies_stage2.Utilities.MovieQueryTask;
 import com.jennings.jadd.popular_movies_stage2.Utilities.NetworkUtils;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 
@@ -26,19 +27,16 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements MoviePosterAdapter.ListItemClickListener {
 
     private ArrayList<Object> movieResultsJson;
-
     private RecyclerView movieList;
     private MoviePosterAdapter mvAdapter;
     private Context mnContext;
     private LinearLayout imgHolder;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        movieResultsJson = new ArrayList<Object>();
         super.onCreate(savedInstanceState);
         startActivity(1);
-
     }
 
     private void startActivity(int currentSortBy) {
@@ -46,15 +44,12 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         mnContext = this;
         movieList = (RecyclerView) findViewById(R.id.rv_movies);
         movieList.setLayoutManager(new GridLayoutManager(mnContext, 2));
-
         mvAdapter = new MoviePosterAdapter(mnContext, this);
-
         movieList.setHasFixedSize(true);
         movieList.setAdapter(mvAdapter);
-
         if(checkInternetConnection(this)) {
             URL movieRequest= NetworkUtils.buildUrl(currentSortBy);
-            new MovieQueryTask().execute(movieRequest);
+            new MovieQueryTask(movieResultsJson, mvAdapter).execute(movieRequest);
         }
         else{
             finish();
@@ -68,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
             return true;
         }
         else{
-
             Toast.makeText(main, "You have to be connected to the internet for this application to work", Toast.LENGTH_LONG).show();
             final Handler delay = new Handler();
             delay.postDelayed(new Runnable() {
@@ -83,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
+        movieResultsJson = mvAdapter.getMovieList();
         Context context = this;
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
@@ -106,45 +101,5 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         }
         return super.onOptionsItemSelected(item);
     }
-    public class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                //mLoadingIndicator.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected String doInBackground(URL... params) {
-                URL searchUrl = params[0];
-                String MovieSearchResults = null;
-                try {
-                    MovieSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (MovieSearchResults != null && !MovieSearchResults.equals("")) {
-
-                    movieResultsJson = JsonUtils.getMovieObjects(MovieSearchResults);
-
-                }
-
-
-                return MovieSearchResults;
-            }
-
-            @Override
-            protected void onPostExecute(String MovieSearchResults) {
-                if (MovieSearchResults != null && !MovieSearchResults.equals("")) {
-                    // COMPLETED (17) Call showJsonDataView if we have valid, non-null results
-
-                    movieResultsJson = JsonUtils.getMovieObjects(MovieSearchResults);
-
-                }
-                mvAdapter.setMovieList(movieResultsJson);
-                mvAdapter.notifyDataSetChanged();
-
-            }
-
-    }
 }
