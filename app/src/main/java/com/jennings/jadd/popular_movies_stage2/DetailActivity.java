@@ -2,24 +2,18 @@ package com.jennings.jadd.popular_movies_stage2;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.jennings.jadd.popular_movies_stage2.Utilities.MovieDetailQueryTask;
-import com.jennings.jadd.popular_movies_stage2.Utilities.MovieQueryTask;
 import com.jennings.jadd.popular_movies_stage2.Utilities.NetworkUtils;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 
-import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -94,13 +88,13 @@ public class DetailActivity extends AppCompatActivity {
             tv_movie_release_date.setText("N/A");
         }
         else{
-            tv_movie_release_date.setText(mvObj.getRelease_date());
+            tv_movie_release_date.setText(mvObj.getRelease_date().substring(0,4));
         }
         if(String.valueOf(mvObj.getVote_average()).isEmpty() ){
             tv_vote_average.setText("N/A");
         }
         else{
-            tv_vote_average.setText(String.valueOf(mvObj.getVote_average()));
+            tv_vote_average.setText(String.valueOf(mvObj.getVote_average()) + "/10");
         }
     }
 

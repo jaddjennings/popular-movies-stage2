@@ -3,6 +3,7 @@ package com.jennings.jadd.popular_movies_stage2.Utilities;
 import android.os.AsyncTask;
 
 import com.jennings.jadd.popular_movies_stage2.MoviePosterAdapter;
+import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -12,6 +13,7 @@ public class MovieDetailQueryTask extends AsyncTask<URL, Void, String> {
 
     private ArrayList<Object> movieReviews;
     private ArrayList<Object> movieTrailers;
+    private MovieObject selectedMovie;
     private MoviePosterAdapter mvAdapter;
     private int detailType;
 
@@ -35,10 +37,16 @@ public class MovieDetailQueryTask extends AsyncTask<URL, Void, String> {
             e.printStackTrace();
         }
         if (MovieDetailResults != null && !MovieDetailResults.equals("")) {
-            if(detailType==1)
-                movieReviews = JsonUtils.getObjectsFromJson(MovieDetailResults,1);
-            else
-                movieTrailers= JsonUtils.getObjectsFromJson(MovieDetailResults,2);
+            switch(detailType){
+
+                case 1:
+                    movieReviews = JsonUtils.getObjectsFromJson(MovieDetailResults,1);
+                case 2:
+                    movieTrailers= JsonUtils.getObjectsFromJson(MovieDetailResults,2);
+                default:
+
+
+            }
         }
 
         return MovieDetailResults;
