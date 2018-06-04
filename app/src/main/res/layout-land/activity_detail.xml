@@ -6,33 +6,43 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/rectangle_view"
+        android:layout_width="254dp"
+        android:layout_height="160dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/shape_rectangle_stroke"
+        app:layout_constraintStart_toEndOf="@+id/image_movie_poster_detail"
+        app:layout_constraintTop_toBottomOf="@+id/movie_title_tv">
+
+    </ImageView>
+
+    <ImageView
         android:id="@+id/image_movie_poster_detail"
-        android:layout_width="142dp"
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="240dp"
+        android:layout_height="160dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         android:contentDescription="MoviePoster"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/movie_plot"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline4"
-        app:layout_constraintVertical_bias="0.102"></ImageView>
+        app:layout_constraintTop_toBottomOf="@+id/movie_title_tv"></ImageView>
 
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/btn_star_big_off" />
 
     <android.support.constraint.Guideline
@@ -44,64 +54,49 @@
 
     <TextView
         android:id="@+id/movie_title_tv"
-        android:layout_width="0dp"
-        android:layout_height="54dp"
+        android:layout_width="495dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.004"
+        app:layout_constraintStart_toEndOf="@+id/imageButton"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         tools:text="@string/movie_title" />
 
     <TextView
         android:id="@+id/vote_average"
-        android:layout_width="146dp"
-        android:layout_height="40dp"
+        android:layout_width="230dp"
+        android:layout_height="77dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.971"
-        app:layout_constraintStart_toEndOf="@+id/image_movie_poster_detail"
-        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle_view"
+        app:layout_constraintEnd_toEndOf="@+id/rectangle_view"
+        app:layout_constraintStart_toStartOf="@+id/rectangle_view"
+        app:layout_constraintTop_toTopOf="@+id/guideline5"
         tools:text="@string/vote_average" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="146dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="60dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.971"
-        app:layout_constraintStart_toEndOf="@+id/image_movie_poster_detail"
-        app:layout_constraintTop_toTopOf="@+id/guideline4" />
-
-    <TextView
         android:id="@+id/movie_release_date_tv"
-        android:layout_width="146dp"
-        android:layout_height="40dp"
+        android:layout_width="232dp"
+        android:layout_height="82dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.971"
-        app:layout_constraintStart_toEndOf="@+id/image_movie_poster_detail"
-        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
+        app:layout_constraintEnd_toEndOf="@+id/rectangle_view"
+        app:layout_constraintStart_toStartOf="@+id/rectangle_view"
         tools:text="@string/release_date" />
 
     <android.support.constraint.Guideline
@@ -109,16 +104,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="224dp" />
+        android:visibility="visible"
+        app:layout_constraintGuide_percent="0.47" />
 
     <TextView
-        android:id="@+id/movie_plot2"
-        android:layout_width="564dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/movie_plot"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="88dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline5"
         tools:text="@string/movie_plot" />
