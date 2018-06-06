@@ -7,15 +7,15 @@
 
     <ImageView
         android:id="@+id/rectangle_view"
-        android:layout_width="0dp"
+        android:layout_width="144dp"
         android:layout_height="160dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="20dp"
         android:src="@drawable/shape_rectangle_stroke"
-        app:layout_constraintBottom_toTopOf="@+id/movie_plot"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_movie_poster_detail">
 
@@ -25,13 +25,13 @@
         android:id="@+id/image_movie_poster_detail"
         android:layout_width="178dp"
         android:layout_height="160dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:adjustViewBounds="true"
         android:contentDescription="MoviePoster"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toTopOf="@+id/movie_plot"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="parent"></ImageView>
 
     <ImageButton
@@ -58,9 +58,9 @@
         android:layout_width="290dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textSize="36sp"
@@ -82,7 +82,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle_view"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/rectangle_view"
         app:layout_constraintStart_toStartOf="@+id/rectangle_view"
         app:layout_constraintTop_toBottomOf="@+id/movie_release_date_tv"
         tools:text="@string/vote_average" />
@@ -110,18 +110,54 @@
         android:visibility="visible"
         app:layout_constraintGuide_percent="0.47" />
 
-    <TextView
-        android:id="@+id/movie_plot"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+    <ScrollView
+        android:id="@+id/scrollview_plot"
+        android:layout_width="349dp"
+        android:layout_height="154dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.266"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline5"
-        tools:text="@string/movie_plot" />
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/movie_plot"
+                android:layout_width="315dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline5"
+                tools:text="@string/movie_plot" />
+        </LinearLayout>
+    </ScrollView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_mv_trailer_review"
+        android:layout_width="350dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollview_plot" />
 
 </android.support.constraint.ConstraintLayout>

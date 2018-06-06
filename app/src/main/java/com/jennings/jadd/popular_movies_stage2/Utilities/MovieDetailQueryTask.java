@@ -3,22 +3,23 @@ package com.jennings.jadd.popular_movies_stage2.Utilities;
 import android.os.AsyncTask;
 
 import com.jennings.jadd.popular_movies_stage2.MoviePosterAdapter;
+import com.jennings.jadd.popular_movies_stage2.MovieTrailerReviewAdapter;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MovieDetailQueryTask extends AsyncTask<URL, Void, String> {
+public class MovieDetailQueryTask extends AsyncTask<URL, Void, ArrayList<Object>> {
 
-    private ArrayList<Object> movieReviews;
-    private ArrayList<Object> movieTrailers;
-    private MovieObject selectedMovie;
-    private MoviePosterAdapter mvAdapter;
+    private ArrayList<Object> movieReturnList;
     private int detailType;
+    private MovieTrailerReviewAdapter mvTrailerReviewAdapter;
 
-    public MovieDetailQueryTask(int detailTypeP){
+    public MovieDetailQueryTask(int detailTypeP, ArrayList<Object> retList, MovieTrailerReviewAdapter mvTRAdapter){
         detailType = detailTypeP;
+        movieReturnList= retList;
+        mvTrailerReviewAdapter = mvTRAdapter;
     }
 
     @Override
@@ -28,7 +29,7 @@ public class MovieDetailQueryTask extends AsyncTask<URL, Void, String> {
     }
 
     @Override
-    protected String doInBackground(URL... params) {
+    protected ArrayList<Object> doInBackground(URL... params) {
         URL searchUrl = params[0];
         String MovieDetailResults = null;
         try {
@@ -37,33 +38,29 @@ public class MovieDetailQueryTask extends AsyncTask<URL, Void, String> {
             e.printStackTrace();
         }
         if (MovieDetailResults != null && !MovieDetailResults.equals("")) {
-            switch(detailType){
+            switch(detailType) {
 
-                case 1:
-                    movieReviews = JsonUtils.getObjectsFromJson(MovieDetailResults,1);
-                case 2:
-                    movieTrailers= JsonUtils.getObjectsFromJson(MovieDetailResults,2);
-                default:
-
-
+                case 1: {
+                    movieReturnList.addAll(JsonUtils.getObjectsFromJson(MovieDetailResults, 1));
+                    break;
+                }
+                case 2: {
+                    movieReturnList.addAll(JsonUtils.getObjectsFromJson(MovieDetailResults, 2));
+                    break;
+                }
+                default: {
+                    break;
+                }
             }
         }
-
-        return MovieDetailResults;
+        return movieReturnList;
     }
 
     @Override
-    protected void onPostExecute(String MovieDetailResults) {
-        if (MovieDetailResults != null && !MovieDetailResults.equals("")) {
-            if(detailType==1)
-                movieReviews = JsonUtils.getObjectsFromJson(MovieDetailResults,1);
-            else
-                movieTrailers= JsonUtils.getObjectsFromJson(MovieDetailResults,2);
-        }
+    protected void onPostExecute(ArrayList<Object> MovieDetailResults) {
 
-//        mvAdapter.setMovieList(movieResultsJson);
-  //      mvAdapter.notifyDataSetChanged();
-
+        mvTrailerReviewAdapter.setMovieTrailerReviewList(movieReturnList);
+        mvTrailerReviewAdapter.notifyDataSetChanged();
     }
 
 }

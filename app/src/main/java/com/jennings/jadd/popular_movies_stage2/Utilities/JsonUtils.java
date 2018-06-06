@@ -75,10 +75,11 @@ public class JsonUtils {
 
     private static MovieTrailerObject parseMovieTrailerObjectJson(String json) throws  JSONException {
         JSONObject js = new JSONObject();
+        js = new JSONObject(json);
         String id = "";
         String name = "";
-        if(js.has("id"))
-            id=js.getString("id");
+        if(js.has("key"))
+            id=js.getString("key");
 
         if(js.has("name"))
             name=js.getString("name");
@@ -90,6 +91,7 @@ public class JsonUtils {
 
     public static MovieReviewObject parseMovieReviewObjectJson(String json) throws  JSONException{
         JSONObject js = new JSONObject();
+        js = new JSONObject(json);
         String author = "";
 
         if(js.has("author"))

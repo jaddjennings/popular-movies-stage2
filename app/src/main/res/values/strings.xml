@@ -11,5 +11,7 @@
     <string name="popular_movie">Sort by Most Popular</string>
     <string name="sort_by_popular_movie">Sort by Most Popular</string>
     <string name="sort_by_top_rated_movie">Sort by Top Rated</string>
+    <string name="movie_review">movie review</string>
+    <string name="movie_trailer_name">movie trailer name</string>
 
 </resources>
