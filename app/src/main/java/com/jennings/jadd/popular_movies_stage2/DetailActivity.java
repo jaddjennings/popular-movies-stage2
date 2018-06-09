@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.jennings.jadd.popular_movies_stage2.Utilities.MovieDetailQueryTask;
 import com.jennings.jadd.popular_movies_stage2.Utilities.NetworkUtils;
+import com.jennings.jadd.popular_movies_stage2.database.AppDatabase;
+import com.jennings.jadd.popular_movies_stage2.database.FavoriteMovie;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 import com.jennings.jadd.popular_movies_stage2.models.MovieTrailerObject;
 import com.squareup.picasso.Picasso;
@@ -35,6 +37,7 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
     @BindView(R.id.movie_release_date_tv) TextView tv_movie_release_date;
     @BindView(R.id.vote_average) TextView tv_vote_average;
     @BindView(R.id.image_movie_poster_detail) ImageView posterDetail;
+    @BindView(R.id.image_button_favorite)     ImageButton isFavorite;
 
     private int movieId;
 
@@ -42,18 +45,22 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
     private RecyclerView mvTrailerReviewList;
     private Context mnContext;
     private MovieTrailerReviewAdapter mvTrailerReviewAdapter;
-
+    // Member variable for the Database
+    private AppDatabase mDb;
+    private MovieObject selectedMovie;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
+
+        mDb = AppDatabase.getInstance(getApplicationContext());
 
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity == null) {
             closeOnError();
         }
 
-        MovieObject selectedMovie;
+
         selectedMovie = intentThatStartedThisActivity.getParcelableExtra("MovieObject");
         if (selectedMovie == null) {
             // selectedMovie data unavailable
@@ -79,15 +86,29 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
 
 
     }
-    @OnClick(R.id.imageButton)
+    @OnClick(R.id.image_button_favorite)
     public void toggleButton(ImageButton b) {
         /**todo:use persistent data to **/
-        if(b.getBackground().equals(android.R.drawable.btn_star_big_on))
-            b.setBackgroundResource(android.R.drawable.btn_star_big_off);
-        else
-            b.setBackgroundResource(android.R.drawable.btn_star_big_on);
-      }
+//        if(b.getBackground().equals(android.R.drawable.btn_star_big_on)) {
+        FavoriteMovie mv = mDb.favoriteMovieDao().loadMovieByMovieId(selectedMovie.getId());
+        if(mv!=null) {
+            mDb.favoriteMovieDao().deleteMovie(mv);
+            isFavorite.setImageResource (android.R.drawable.btn_star_big_off);
+        }
+        else {
+            mDb.favoriteMovieDao().insertMovie(new FavoriteMovie(selectedMovie.getId(), selectedMovie.getTitle()));
+            isFavorite.setImageResource(android.R.drawable.btn_star_big_on);
+        }
+
+    }
     private void loadUI(MovieObject mvObj){
+
+        FavoriteMovie mv = mDb.favoriteMovieDao().loadMovieByMovieId(mvObj.getId());
+        if(mv!=null)
+            isFavorite.setImageResource(android.R.drawable.btn_star_big_on);
+        else
+            isFavorite.setImageResource(android.R.drawable.btn_star_big_off);
+
 
         Picasso.with(this)
                 .load(mvObj.getPosterPath())

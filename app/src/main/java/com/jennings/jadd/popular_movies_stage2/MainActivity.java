@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.jennings.jadd.popular_movies_stage2.Utilities.JsonUtils;
 import com.jennings.jadd.popular_movies_stage2.Utilities.MovieQueryTask;
 import com.jennings.jadd.popular_movies_stage2.Utilities.NetworkUtils;
+import com.jennings.jadd.popular_movies_stage2.database.AppDatabase;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 
 import java.io.IOException;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     private Context mnContext;
     private LinearLayout imgHolder;
 
+    private AppDatabase mDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         movieResultsJson = new ArrayList<Object>();
@@ -40,7 +43,9 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     }
 
     private void startActivity(int currentSortBy) {
+
         setContentView(R.layout.activity_main);
+        mDb = AppDatabase.getInstance(getApplicationContext());
         mnContext = this;
         movieList = (RecyclerView) findViewById(R.id.rv_movies);
         movieList.setLayoutManager(new GridLayoutManager(mnContext, 2));

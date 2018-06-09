@@ -35,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"></ImageView>
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/image_button_favorite"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
@@ -66,7 +66,7 @@
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintStart_toEndOf="@+id/image_button_favorite"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         tools:text="@string/movie_title" />

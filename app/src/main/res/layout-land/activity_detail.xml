@@ -39,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@+id/movie_title_tv"></ImageView>
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/image_button_favorite"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
@@ -73,7 +73,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.004"
-        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintStart_toEndOf="@+id/image_button_favorite"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/movie_title" />
 
