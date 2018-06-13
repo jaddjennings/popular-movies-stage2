@@ -1,6 +1,10 @@
 package com.jennings.jadd.popular_movies_stage2;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +15,7 @@ import android.widget.ImageView;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 
@@ -23,6 +28,8 @@ public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter
     private String imagePath;
     private ArrayList<Object> movieList;
     final private ListItemClickListener mOnClickListener;
+    Bitmap posterBMP;
+    byte[] img;
 
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
@@ -83,12 +90,31 @@ public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter
 
 
         void bind(int listIndex){
+            MovieObject bindMovieObj = ((MovieObject) movieList.get(listIndex));
+            Uri favPoster;
 
-             if(listIndex>=0)
-                Picasso.with(mnActivity)
-                       .load(((MovieObject)movieList.get(listIndex)).getPosterPath())
-                       .into(listItemMoviePosterView);
+             if(listIndex>=0) {
+                 if(bindMovieObj.getPosterImage()!=null){
+                     img = bindMovieObj.getPosterImage();
+                     posterBMP = BitmapFactory.decodeByteArray(img, 0, img.length);
+                     favPoster = getImgURI(mnActivity, posterBMP);
+                     Picasso.with(mnActivity)
+                             .load( favPoster)
+                             .into(listItemMoviePosterView);
+                 }
+                 else {
+                     Picasso.with(mnActivity)
+                             .load(bindMovieObj.getPosterPath())
+                             .into(listItemMoviePosterView);
+                 }
+             }
+        }
 
+        public Uri getImgURI(Context inContext, Bitmap inImg){
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            inImg.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImg, "Poster",null);
+            return Uri.parse(path);
         }
     }
 }

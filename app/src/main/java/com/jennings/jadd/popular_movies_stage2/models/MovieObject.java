@@ -16,7 +16,7 @@ public class MovieObject implements Parcelable{
     private String posterPath;
     private String overview;
     private String release_date;
-
+    private byte[] posterImage;
 
     public MovieObject(){
     }
@@ -150,5 +150,13 @@ public class MovieObject implements Parcelable{
         dest.writeDouble(this.vote_average);
         dest.writeDouble(this.popularity);
 
+    }
+
+    public byte[] getPosterImage() {
+        return posterImage;
+    }
+
+    public void setPosterImage(byte[] posterImage) {
+        this.posterImage = posterImage;
     }
 }

@@ -3,6 +3,9 @@ package com.jennings.jadd.popular_movies_stage2;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +23,13 @@ import com.jennings.jadd.popular_movies_stage2.database.FavoriteMovie;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 import com.jennings.jadd.popular_movies_stage2.models.MovieTrailerObject;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -48,6 +56,11 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
     // Member variable for the Database
     private AppDatabase mDb;
     private MovieObject selectedMovie;
+    ByteBuffer bb;
+    byte[] bytes;
+    ByteArrayOutputStream stream;
+    Bitmap posterBMP;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
@@ -93,11 +106,49 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
         FavoriteMovie mv = mDb.favoriteMovieDao().loadMovieByMovieId(selectedMovie.getId());
         if(mv!=null) {
             mDb.favoriteMovieDao().deleteMovie(mv);
+
             isFavorite.setImageResource (android.R.drawable.btn_star_big_off);
         }
         else {
-            mDb.favoriteMovieDao().insertMovie(new FavoriteMovie(selectedMovie.getId(), selectedMovie.getTitle()));
+
+            Target target = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    try {
+                        stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+
+
+                        /**int size= bitmap.getRowBytes() * bitmap.getHeight();
+                        bb = ByteBuffer.allocate(size);
+                        bitmap.copyPixelsToBuffer(bb);
+                        bytes = new byte[size];
+                        bb.get(bytes,0,bytes.length);
+                        **/
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    return;
+                }
+            };
+            Picasso.with(this)
+                    .load(selectedMovie.getPosterPath())
+                    .into(target);
+            FavoriteMovie newFavMv = new FavoriteMovie(selectedMovie);
+            newFavMv.setPoster(stream.toByteArray());
+            mDb.favoriteMovieDao().insertMovie(newFavMv);
             isFavorite.setImageResource(android.R.drawable.btn_star_big_on);
+            posterBMP = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.toByteArray().length);
+
         }
 
     }

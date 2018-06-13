@@ -8,6 +8,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -25,11 +26,11 @@ public interface FavoriteMovieDao {
         @Delete
         void deleteMovie(FavoriteMovie favoriteMovie);
 
-    @Query("SELECT * FROM favoriteMovie WHERE id = :id")
-    FavoriteMovie loadMovieById(int id);
+        @Query("SELECT * FROM favoriteMovie WHERE id = :id")
+        FavoriteMovie loadMovieById(int id);
 
-    @Query("SELECT * FROM favoriteMovie WHERE movieId = :movieId")
-    FavoriteMovie loadMovieByMovieId(int movieId);
+        @Query("SELECT * FROM favoriteMovie WHERE movieId = :movieId")
+        FavoriteMovie loadMovieByMovieId(int movieId);
 
     }
 
