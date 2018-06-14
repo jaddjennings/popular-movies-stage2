@@ -4,18 +4,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
+import com.jennings.jadd.popular_movies_stage2.Utilities.Helpers;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 import com.squareup.picasso.Picasso;
-
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 
@@ -25,7 +22,6 @@ public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter
 
     private int mMoviePosterItems;
     private Context mnActivity;
-    private String imagePath;
     private ArrayList<Object> movieList;
     final private ListItemClickListener mOnClickListener;
     Bitmap posterBMP;
@@ -97,7 +93,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter
                  if(bindMovieObj.getPosterImage()!=null){
                      img = bindMovieObj.getPosterImage();
                      posterBMP = BitmapFactory.decodeByteArray(img, 0, img.length);
-                     favPoster = getImgURI(mnActivity, posterBMP);
+                     favPoster = Helpers.getImgURI(mnActivity, posterBMP);
                      Picasso.with(mnActivity)
                              .load( favPoster)
                              .into(listItemMoviePosterView);
@@ -110,11 +106,6 @@ public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter
              }
         }
 
-        public Uri getImgURI(Context inContext, Bitmap inImg){
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            inImg.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImg, "Poster",null);
-            return Uri.parse(path);
-        }
+
     }
 }

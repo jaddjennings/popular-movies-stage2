@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jennings.jadd.popular_movies_stage2.Utilities.Helpers;
 import com.jennings.jadd.popular_movies_stage2.Utilities.MovieDetailQueryTask;
 import com.jennings.jadd.popular_movies_stage2.Utilities.NetworkUtils;
 import com.jennings.jadd.popular_movies_stage2.database.AppDatabase;
@@ -28,6 +29,7 @@ import com.squareup.picasso.Target;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -56,10 +58,7 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
     // Member variable for the Database
     private AppDatabase mDb;
     private MovieObject selectedMovie;
-    ByteBuffer bb;
-    byte[] bytes;
     ByteArrayOutputStream stream;
-    Bitmap posterBMP;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,14 +116,6 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
                     try {
                         stream = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
-
-
-                        /**int size= bitmap.getRowBytes() * bitmap.getHeight();
-                        bb = ByteBuffer.allocate(size);
-                        bitmap.copyPixelsToBuffer(bb);
-                        bytes = new byte[size];
-                        bb.get(bytes,0,bytes.length);
-                        **/
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -147,7 +138,6 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
             newFavMv.setPoster(stream.toByteArray());
             mDb.favoriteMovieDao().insertMovie(newFavMv);
             isFavorite.setImageResource(android.R.drawable.btn_star_big_on);
-            posterBMP = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.toByteArray().length);
 
         }
 
@@ -155,15 +145,24 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
     private void loadUI(MovieObject mvObj){
 
         FavoriteMovie mv = mDb.favoriteMovieDao().loadMovieByMovieId(mvObj.getId());
-        if(mv!=null)
+        MovieObject favMovie=new MovieObject();
+        if(mv!=null) {
             isFavorite.setImageResource(android.R.drawable.btn_star_big_on);
-        else
+            favMovie = mv.getMovieObject();
+            favMovie.setPosterImage(mv.getPoster());
+            byte[] img =   favMovie.getPosterImage();
+            Bitmap posterBMP = BitmapFactory.decodeByteArray(img, 0, img.length);
+            Uri favPoster = Helpers.getImgURI(this, posterBMP);
+            Picasso.with(this)
+                    .load(favPoster)
+                    .into(posterDetail);
+        }
+        else {
             isFavorite.setImageResource(android.R.drawable.btn_star_big_off);
-
-
-        Picasso.with(this)
-                .load(mvObj.getPosterPath())
-                .into(posterDetail);
+            Picasso.with(this)
+                    .load(mvObj.getPosterPath())
+                    .into(posterDetail);
+        }
 
         if(mvObj.getTitle().isEmpty()){
             tv_title.setText("N/A");
