@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     private MoviePosterAdapter mvAdapter;
     private Context mnContext;
     private LinearLayout imgHolder;
-
     private AppDatabase mDb;
 
     @Override
@@ -71,9 +70,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
             URL movieRequest= NetworkUtils.buildUrl(currentSortBy);
             new MovieQueryTask(movieResultsJson, mvAdapter).execute(movieRequest);
         }
-        else{
-            finish();
-        }
+
     }
 
     private void loadFavoriteMovies() {
@@ -102,14 +99,8 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
             return true;
         }
         else{
-            Toast.makeText(main, "You have to be connected to the internet for this application to work", Toast.LENGTH_LONG).show();
-            final Handler delay = new Handler();
-            delay.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            },2000);
+            Toast.makeText(main, "You have to be connected to the internet to get most popular or top rated movies", Toast.LENGTH_LONG).show();
+            startActivity(SHOWFAV);
             return false;
         }
     }

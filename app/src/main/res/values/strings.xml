@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">popular-movies-stage2</string>
+    <string name="app_name">Movie App</string>
     <string name="movie_title">Title:</string>
     <string name="release_date">Date Of Release:</string>
     <string name="movie_plot">Plot:</string>
@@ -14,5 +14,6 @@
     <string name="show_favorite_movies">Show Favorite Movies</string>
     <string name="movie_review">movie review</string>
     <string name="movie_trailer_name">movie trailer name</string>
+    <string name="rectangle_view_content_description">rectangle view to frame content</string>
 
 </resources>

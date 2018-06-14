@@ -17,7 +17,8 @@
         android:src="@drawable/shape_rectangle_stroke"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_movie_poster_detail">
+        app:layout_constraintStart_toEndOf="@+id/image_movie_poster_detail"
+        android:contentDescription="@string/rectangle_view_content_description">
 
     </ImageView>
 
@@ -41,9 +42,13 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="TODO"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@android:drawable/btn_star_big_off" />
 
     <android.support.constraint.Guideline
@@ -51,19 +56,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="60dp" />
+        app:layout_constraintGuide_end="480dp" />
 
     <TextView
         android:id="@+id/movie_title_tv"
         android:layout_width="290dp"
-        android:layout_height="50dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textSize="36sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_button_favorite"
@@ -113,7 +118,7 @@
     <ScrollView
         android:id="@+id/scrollview_plot"
         android:layout_width="349dp"
-        android:layout_height="154dp"
+        android:layout_height="115dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
@@ -128,7 +133,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -153,8 +158,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_mv_trailer_review"
         android:layout_width="350dp"
-        android:layout_height="60dp"
+        android:layout_height="123dp"
         android:layout_marginTop="8dp"
+        android:focusable="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
