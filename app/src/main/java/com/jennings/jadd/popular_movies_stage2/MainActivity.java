@@ -4,11 +4,13 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     public static final int SHOWFAV = 3;
     public static final int TOP_RATED_SORT = 2;
     public static final int MOST_POP_SORT = 1;
+    private static final String LIFECYCLE_CALLBACKS_SORT_MODE = "sort_mode";
+    private static final String MOVIE_LIST_STATE_KEY = "movie_list_state_key";
     private ArrayList<Object> movieResultsJson;
     private ArrayList<Object> favMovieList;
     private RecyclerView movieList;
@@ -42,34 +46,85 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     private Context mnContext;
     private LinearLayout imgHolder;
     private AppDatabase mDb;
+    private Parcelable mvListState;
+    private URL movieRequest;
+    private Parcelable mLayoutManagerState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        movieResultsJson = new ArrayList<Object>();
-        setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         loadFavoriteMovies();
-        startActivity(MOST_POP_SORT);
+        movieResultsJson = new ArrayList<Object>();
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(LIFECYCLE_CALLBACKS_SORT_MODE)) {
+                int allPreviousLifecycleCallbacks = savedInstanceState.getInt(LIFECYCLE_CALLBACKS_SORT_MODE);
+                SharedPreferences.Editor editor = getSharedPreferences("MyPref", MODE_PRIVATE).edit();
+                editor.putInt("sort_order", allPreviousLifecycleCallbacks);
+                editor.apply();
+            }
+            if (savedInstanceState.containsKey(MOVIE_LIST_STATE_KEY)) {
+                mnContext = this;
+                if(movieList == null) {
+                    movieList = (RecyclerView) findViewById(R.id.rv_movies);
+                    movieList.setLayoutManager(new GridLayoutManager(mnContext, 2));
+                    mvAdapter = new MoviePosterAdapter(mnContext, this);
+                    movieList.setHasFixedSize(true);
+                    movieList.setAdapter(mvAdapter);
+                }
+                mLayoutManagerState = savedInstanceState.getParcelable(MOVIE_LIST_STATE_KEY);
+                movieList.getLayoutManager().onRestoreInstanceState(mLayoutManagerState);
+
+            }
+        }
+            startActivity();
     }
 
-    private void startActivity(int currentSortBy) {
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        int sort_order = pref.getInt("sort_order", MOST_POP_SORT);
+        outState.putInt(LIFECYCLE_CALLBACKS_SORT_MODE, sort_order);
+        Parcelable currentListSate = movieList.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(MOVIE_LIST_STATE_KEY, currentListSate);
+    }
 
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        Bundle mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = movieList.getLayoutManager().onSaveInstanceState();
+        mvListState = listState;
+        mBundleRecyclerViewState.putParcelable(MOVIE_LIST_STATE_KEY, listState);
+    }
+
+
+    private void startActivity() {
+
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        int current_sort_by = pref.getInt("sort_order", MOST_POP_SORT);
 
         mnContext = this;
-        movieList = (RecyclerView) findViewById(R.id.rv_movies);
-        movieList.setLayoutManager(new GridLayoutManager(mnContext, 2));
-        mvAdapter = new MoviePosterAdapter(mnContext, this);
-        movieList.setHasFixedSize(true);
-        movieList.setAdapter(mvAdapter);
-        if(currentSortBy == SHOWFAV){
+        if(movieList == null) {
+            movieList = (RecyclerView) findViewById(R.id.rv_movies);
+            movieList.setLayoutManager(new GridLayoutManager(mnContext, 2));
+            mvAdapter = new MoviePosterAdapter(mnContext, this);
+            movieList.setHasFixedSize(true);
+            movieList.setAdapter(mvAdapter);
+        }
+        if(current_sort_by == SHOWFAV){
 
             mvAdapter.setMovieList(favMovieList);
             mvAdapter.notifyDataSetChanged();
         }
-        else if(checkInternetConnection(this)) {
-            URL movieRequest= NetworkUtils.buildUrl(currentSortBy);
-            new MovieQueryTask(movieResultsJson, mvAdapter).execute(movieRequest);
+        else if(checkInternetConnection(this) && movieRequest == null) {
+            movieRequest = NetworkUtils.buildUrl(current_sort_by);
+            new MovieQueryTask(movieResultsJson, mvAdapter, movieList, mLayoutManagerState ).execute(movieRequest);
         }
+
 
     }
 
@@ -77,9 +132,16 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
 
         mDb = AppDatabase.getInstance(getApplicationContext());
         favMovieList = new ArrayList<Object>();
-        LiveData<List<FavoriteMovie>> favMovies = mDb.favoriteMovieDao().loadAllMovies();
-        //movieResultsJson = (ArrayList<Object>) favMovies.getValue();
-        favMovies.observe(this, new Observer<List<FavoriteMovie>>(){
+        //LiveData<List<FavoriteMovie>> favMovies = mDb.favoriteMovieDao().loadAllMovies();
+        List<FavoriteMovie> favMovies = mDb.favoriteMovieDao().loadAllMoviesAlt();
+        for (int i = 0; i<favMovies.size();i++) {
+
+            MovieObject fvMv =  favMovies.get(i).getMovieObject();
+            fvMv.setPosterImage(favMovies.get(i).getPoster());
+            favMovieList.add(fvMv);
+        }
+       // favMovies.observe(this, new Observer<List<FavoriteMovie>>(){
+       /** favMovies.observeForever(new Observer<List<FavoriteMovie>>(){
             @Override
             public void onChanged(@Nullable List<FavoriteMovie> favoriteMovie) {
                 for (int i = 0; i<favoriteMovie.size();i++) {
@@ -89,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
                     favMovieList.add(fvMv);
                 }
             }
-        });
+        });**/
     }
 
     private boolean checkInternetConnection(Context main) {
@@ -100,7 +162,6 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         }
         else{
             Toast.makeText(main, "You have to be connected to the internet to get most popular or top rated movies", Toast.LENGTH_LONG).show();
-            startActivity(SHOWFAV);
             return false;
         }
     }
@@ -121,18 +182,29 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     }
     public boolean onOptionsItemSelected(MenuItem item){
         int menuItemThatWasSelected = item.getItemId();
+        movieRequest = null;
         if(menuItemThatWasSelected == R.id.sort_by_popular_movie){
             Context context = MainActivity.this;
-            startActivity(MOST_POP_SORT);
+            SharedPreferences.Editor editor = getSharedPreferences("MyPref", MODE_PRIVATE).edit();
+            editor.putInt("sort_order", MOST_POP_SORT);
+            editor.apply();
+
+            startActivity();
         }
         if(menuItemThatWasSelected == R.id.sort_by_top_rated_movie){
             Context context = MainActivity.this;
-            startActivity(TOP_RATED_SORT);
+            SharedPreferences.Editor editor = getSharedPreferences("MyPref", MODE_PRIVATE).edit();
+            editor.putInt("sort_order", TOP_RATED_SORT);
+            editor.apply();
+            startActivity();
         }
         if(menuItemThatWasSelected == R.id.show_favorite_movies){
             Context context = MainActivity.this;
-            /** todo:add functionality for favorite movies and use in parameter**/
-            startActivity(SHOWFAV);
+            SharedPreferences.Editor editor = getSharedPreferences("MyPref", MODE_PRIVATE).edit();
+            editor.putInt("sort_order", SHOWFAV);
+            editor.apply();
+
+            startActivity();
         }
         return super.onOptionsItemSelected(item);
     }

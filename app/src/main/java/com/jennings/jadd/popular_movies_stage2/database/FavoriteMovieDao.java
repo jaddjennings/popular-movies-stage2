@@ -17,6 +17,9 @@ public interface FavoriteMovieDao {
         @Query("SELECT * FROM favoriteMovie ")
         LiveData<List<FavoriteMovie>> loadAllMovies();
 
+        @Query("SELECT * FROM favoriteMovie ")
+        List<FavoriteMovie> loadAllMoviesAlt();
+
         @Insert
         void insertMovie(FavoriteMovie favoriteMovie);
 

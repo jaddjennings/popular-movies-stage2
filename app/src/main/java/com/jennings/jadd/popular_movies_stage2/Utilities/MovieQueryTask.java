@@ -1,6 +1,8 @@
 package com.jennings.jadd.popular_movies_stage2.Utilities;
 
 import android.os.AsyncTask;
+import android.os.Parcelable;
+import android.support.v7.widget.RecyclerView;
 
 import com.jennings.jadd.popular_movies_stage2.MoviePosterAdapter;
 
@@ -10,12 +12,16 @@ import java.util.ArrayList;
 
 public class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
+    private final RecyclerView mvListRV;
+    private final Parcelable mvStateOfRV;
     private ArrayList<Object> movieResultsJson;
     private MoviePosterAdapter mvAdapter;
 
-    public  MovieQueryTask(ArrayList<Object> mvResults, MoviePosterAdapter mvAdaptr){
+    public  MovieQueryTask(ArrayList<Object> mvResults, MoviePosterAdapter mvAdaptr, RecyclerView rv, Parcelable stateOfList){
         movieResultsJson = mvResults;
         mvAdapter = mvAdaptr;
+        mvListRV = rv;
+        mvStateOfRV = stateOfList;
     }
 
     @Override
@@ -53,6 +59,8 @@ public class MovieQueryTask extends AsyncTask<URL, Void, String> {
         }
         mvAdapter.setMovieList(movieResultsJson);
         mvAdapter.notifyDataSetChanged();
+        if(mvStateOfRV != null)
+            mvListRV.getLayoutManager().onRestoreInstanceState(mvStateOfRV);
 
     }
 
