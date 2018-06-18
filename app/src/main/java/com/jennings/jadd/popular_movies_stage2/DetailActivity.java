@@ -42,6 +42,8 @@ import butterknife.OnClick;
 public class DetailActivity extends AppCompatActivity implements  MovieTrailerReviewAdapter.ListItemClickListener  {
 
 
+    public static final int LOAD_TRAILERS = 1;
+    public static final int LOAD_REVIEWS = 2;
     @BindView(R.id.movie_title_tv) TextView tv_title;
     @BindView(R.id.movie_plot) TextView tv_movie_plot;
     @BindView(R.id.movie_release_date_tv) TextView tv_movie_release_date;
@@ -89,12 +91,12 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
         mvTrailerReviewList.setHasFixedSize(true);
         mvTrailerReviewList.setAdapter(mvTrailerReviewAdapter);
 
-        URL movieDetailReviews= NetworkUtils.buildUrlDetail(1,movieId);
-        URL movieDetailTrailers= NetworkUtils.buildUrlDetail(2,movieId);
+        URL movieDetailReviews= NetworkUtils.buildUrlDetail(LOAD_TRAILERS,movieId);
+        URL movieDetailTrailers= NetworkUtils.buildUrlDetail(LOAD_REVIEWS,movieId);
 
-        new MovieDetailQueryTask(2,movieTrailerAndReviewList, mvTrailerReviewAdapter).execute(movieDetailTrailers);
+        new MovieDetailQueryTask(LOAD_TRAILERS,movieTrailerAndReviewList, mvTrailerReviewAdapter).execute(movieDetailTrailers);
 
-        new MovieDetailQueryTask(1,movieTrailerAndReviewList, mvTrailerReviewAdapter).execute(movieDetailReviews);
+        new MovieDetailQueryTask(LOAD_REVIEWS,movieTrailerAndReviewList, mvTrailerReviewAdapter).execute(movieDetailReviews);
 
 
     }

@@ -169,9 +169,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     @Override
     public void onListItemClick(int clickedItemIndex) {
         movieResultsJson = mvAdapter.getMovieList();
-        Context context = this;
-        Class destinationClass = DetailActivity.class;
-        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+        Intent intentToStartDetailActivity = new Intent(this, DetailActivity.class);
         intentToStartDetailActivity.putExtra("intValue",clickedItemIndex);
         intentToStartDetailActivity.putExtra("MovieObject",(MovieObject)movieResultsJson.get(clickedItemIndex));
         startActivity(intentToStartDetailActivity);
