@@ -1,5 +1,7 @@
 package com.jennings.jadd.popular_movies_stage2;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,9 +9,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -20,6 +24,7 @@ import com.jennings.jadd.popular_movies_stage2.Utilities.MovieQueryTask;
 import com.jennings.jadd.popular_movies_stage2.Utilities.NetworkUtils;
 import com.jennings.jadd.popular_movies_stage2.database.AppDatabase;
 import com.jennings.jadd.popular_movies_stage2.database.FavoriteMovie;
+import com.jennings.jadd.popular_movies_stage2.models.FavMovieViewModel;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 
 import java.net.URL;
@@ -29,7 +34,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements MoviePosterAdapter.ListItemClickListener {
 
     private ArrayList<Object> movieResultsJson;
-    private ArrayList<Object> favMovieList;
+    private List<FavoriteMovie> favMovieList;
     private RecyclerView movieList;
     private MoviePosterAdapter mvAdapter;
     private Context mnContext;
@@ -43,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loadFavoriteMovies();
+        setupViewModel();
         movieResultsJson = new ArrayList<Object>();
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(Helpers.LIFECYCLE_CALLBACKS_SORT_MODE)) {
@@ -106,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         }
         if(current_sort_by == Helpers.SHOWFAV){
 
-            mvAdapter.setMovieList(favMovieList);
+            mvAdapter.setFavoriteMovieList(favMovieList);
             mvAdapter.notifyDataSetChanged();
         }
         else if(checkInternetConnection(this) && movieRequest == null) {
@@ -116,31 +121,19 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
 
 
     }
+    private void setupViewModel() {
 
-    private void loadFavoriteMovies() {
-
-        mDb = AppDatabase.getInstance(getApplicationContext());
-        favMovieList = new ArrayList<Object>();
-        //LiveData<List<FavoriteMovie>> favMovies = mDb.favoriteMovieDao().loadAllMovies();
-        List<FavoriteMovie> favMovies = mDb.favoriteMovieDao().loadAllMoviesAlt();
-        for (int i = 0; i<favMovies.size();i++) {
-
-            MovieObject fvMv =  favMovies.get(i).getMovieObject();
-            fvMv.setPosterImage(favMovies.get(i).getPoster());
-            favMovieList.add(fvMv);
-        }
-       // favMovies.observe(this, new Observer<List<FavoriteMovie>>(){
-       /** favMovies.observeForever(new Observer<List<FavoriteMovie>>(){
+        FavMovieViewModel viewModel = ViewModelProviders.of(this).get(FavMovieViewModel.class);
+        // COMPLETED (7) Observe the LiveData object in the ViewModel
+        viewModel.getFavoriteMovies().observe(this, new Observer<List<FavoriteMovie>>() {
             @Override
             public void onChanged(@Nullable List<FavoriteMovie> favoriteMovie) {
-                for (int i = 0; i<favoriteMovie.size();i++) {
-
-                    MovieObject fvMv =  favoriteMovie.get(i).getMovieObject();
-                    fvMv.setPosterImage(favoriteMovie.get(i).getPoster());
-                    favMovieList.add(fvMv);
-                }
+             //   Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                favMovieList = favoriteMovie;
+                mvAdapter.setFavoriteMovieList(favoriteMovie);
+                mvAdapter.notifyDataSetChanged();
             }
-        });**/
+        });
     }
 
     private boolean checkInternetConnection(Context main) {

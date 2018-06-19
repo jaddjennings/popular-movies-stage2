@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.jennings.jadd.popular_movies_stage2.Utilities.Helpers;
+import com.jennings.jadd.popular_movies_stage2.database.FavoriteMovie;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter.MoviePosterViewHolder>{
@@ -40,6 +42,17 @@ public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter
     public void setMovieList(ArrayList<Object> movies){
         mMoviePosterItems= movies.size();
         movieList = movies;
+    }
+    public void setFavoriteMovieList(List<FavoriteMovie> favoriteMovies){
+        if(favoriteMovies !=null) {
+            mMoviePosterItems = favoriteMovies.size();
+            movieList = new ArrayList<Object>();
+            for (int i = 0; i < favoriteMovies.size(); i++) {
+                MovieObject fvMv = favoriteMovies.get(i).getMovieObject();
+                fvMv.setPosterImage(favoriteMovies.get(i).getPoster());
+                movieList.add(fvMv);
+            }
+        }
     }
     public ArrayList<Object> getMovieList(){
         return movieList;
