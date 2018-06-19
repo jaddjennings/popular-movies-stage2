@@ -124,14 +124,12 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     private void setupViewModel() {
 
         FavMovieViewModel viewModel = ViewModelProviders.of(this).get(FavMovieViewModel.class);
-        // COMPLETED (7) Observe the LiveData object in the ViewModel
+
         viewModel.getFavoriteMovies().observe(this, new Observer<List<FavoriteMovie>>() {
             @Override
             public void onChanged(@Nullable List<FavoriteMovie> favoriteMovie) {
-             //   Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
                 favMovieList = favoriteMovie;
                 mvAdapter.setFavoriteMovieList(favoriteMovie);
-                mvAdapter.notifyDataSetChanged();
             }
         });
     }
