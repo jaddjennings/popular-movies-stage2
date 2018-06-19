@@ -95,7 +95,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter <MoviePosterAdapter
                      posterBMP = BitmapFactory.decodeByteArray(img, 0, img.length);
                      favPoster = Helpers.getImgURI(mnActivity, posterBMP);
                      Picasso.with(mnActivity)
-                             .load( favPoster)
+                             .load(favPoster)
                              .into(listItemMoviePosterView);
                  }
                  else {

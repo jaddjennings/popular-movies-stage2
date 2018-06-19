@@ -1,17 +1,12 @@
 package com.jennings.jadd.popular_movies_stage2;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,25 +15,19 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.jennings.jadd.popular_movies_stage2.Utilities.JsonUtils;
+import com.jennings.jadd.popular_movies_stage2.Utilities.Helpers;
 import com.jennings.jadd.popular_movies_stage2.Utilities.MovieQueryTask;
 import com.jennings.jadd.popular_movies_stage2.Utilities.NetworkUtils;
 import com.jennings.jadd.popular_movies_stage2.database.AppDatabase;
 import com.jennings.jadd.popular_movies_stage2.database.FavoriteMovie;
 import com.jennings.jadd.popular_movies_stage2.models.MovieObject;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MoviePosterAdapter.ListItemClickListener {
 
-    public static final int SHOWFAV = 3;
-    public static final int TOP_RATED_SORT = 2;
-    public static final int MOST_POP_SORT = 1;
-    private static final String LIFECYCLE_CALLBACKS_SORT_MODE = "sort_mode";
-    private static final String MOVIE_LIST_STATE_KEY = "movie_list_state_key";
     private ArrayList<Object> movieResultsJson;
     private ArrayList<Object> favMovieList;
     private RecyclerView movieList;
@@ -57,13 +46,13 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         loadFavoriteMovies();
         movieResultsJson = new ArrayList<Object>();
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(LIFECYCLE_CALLBACKS_SORT_MODE)) {
-                int allPreviousLifecycleCallbacks = savedInstanceState.getInt(LIFECYCLE_CALLBACKS_SORT_MODE);
+            if (savedInstanceState.containsKey(Helpers.LIFECYCLE_CALLBACKS_SORT_MODE)) {
+                int allPreviousLifecycleCallbacks = savedInstanceState.getInt(Helpers.LIFECYCLE_CALLBACKS_SORT_MODE);
                 SharedPreferences.Editor editor = getSharedPreferences("MyPref", MODE_PRIVATE).edit();
                 editor.putInt("sort_order", allPreviousLifecycleCallbacks);
                 editor.apply();
             }
-            if (savedInstanceState.containsKey(MOVIE_LIST_STATE_KEY)) {
+            if (savedInstanceState.containsKey(Helpers.MOVIE_LIST_STATE_KEY)) {
                 mnContext = this;
                 if(movieList == null) {
                     movieList = (RecyclerView) findViewById(R.id.rv_movies);
@@ -72,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
                     movieList.setHasFixedSize(true);
                     movieList.setAdapter(mvAdapter);
                 }
-                mLayoutManagerState = savedInstanceState.getParcelable(MOVIE_LIST_STATE_KEY);
+                mLayoutManagerState = savedInstanceState.getParcelable(Helpers.MOVIE_LIST_STATE_KEY);
                 movieList.getLayoutManager().onRestoreInstanceState(mLayoutManagerState);
 
             }
@@ -83,10 +72,10 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-        int sort_order = pref.getInt("sort_order", MOST_POP_SORT);
-        outState.putInt(LIFECYCLE_CALLBACKS_SORT_MODE, sort_order);
+        int sort_order = pref.getInt("sort_order", Helpers.MOST_POP_SORT);
+        outState.putInt(Helpers.LIFECYCLE_CALLBACKS_SORT_MODE, sort_order);
         Parcelable currentListSate = movieList.getLayoutManager().onSaveInstanceState();
-        outState.putParcelable(MOVIE_LIST_STATE_KEY, currentListSate);
+        outState.putParcelable(Helpers.MOVIE_LIST_STATE_KEY, currentListSate);
     }
 
     @Override
@@ -97,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         Bundle mBundleRecyclerViewState = new Bundle();
         Parcelable listState = movieList.getLayoutManager().onSaveInstanceState();
         mvListState = listState;
-        mBundleRecyclerViewState.putParcelable(MOVIE_LIST_STATE_KEY, listState);
+        mBundleRecyclerViewState.putParcelable(Helpers.MOVIE_LIST_STATE_KEY, listState);
     }
 
 
@@ -105,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
 
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-        int current_sort_by = pref.getInt("sort_order", MOST_POP_SORT);
+        int current_sort_by = pref.getInt("sort_order", Helpers.MOST_POP_SORT);
 
         mnContext = this;
         if(movieList == null) {
@@ -115,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
             movieList.setHasFixedSize(true);
             movieList.setAdapter(mvAdapter);
         }
-        if(current_sort_by == SHOWFAV){
+        if(current_sort_by == Helpers.SHOWFAV){
 
             mvAdapter.setMovieList(favMovieList);
             mvAdapter.notifyDataSetChanged();
@@ -184,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         if(menuItemThatWasSelected == R.id.sort_by_popular_movie){
             Context context = MainActivity.this;
             SharedPreferences.Editor editor = getSharedPreferences("MyPref", MODE_PRIVATE).edit();
-            editor.putInt("sort_order", MOST_POP_SORT);
+            editor.putInt("sort_order", Helpers.MOST_POP_SORT);
             editor.apply();
 
             startActivity();
@@ -192,14 +181,14 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         if(menuItemThatWasSelected == R.id.sort_by_top_rated_movie){
             Context context = MainActivity.this;
             SharedPreferences.Editor editor = getSharedPreferences("MyPref", MODE_PRIVATE).edit();
-            editor.putInt("sort_order", TOP_RATED_SORT);
+            editor.putInt("sort_order", Helpers.TOP_RATED_SORT);
             editor.apply();
             startActivity();
         }
         if(menuItemThatWasSelected == R.id.show_favorite_movies){
             Context context = MainActivity.this;
             SharedPreferences.Editor editor = getSharedPreferences("MyPref", MODE_PRIVATE).edit();
-            editor.putInt("sort_order", SHOWFAV);
+            editor.putInt("sort_order", Helpers.SHOWFAV);
             editor.apply();
 
             startActivity();
