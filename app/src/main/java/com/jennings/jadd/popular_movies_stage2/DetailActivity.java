@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageButton;
@@ -27,11 +26,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.net.URI;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -42,8 +37,6 @@ import butterknife.OnClick;
 public class DetailActivity extends AppCompatActivity implements  MovieTrailerReviewAdapter.ListItemClickListener  {
 
 
-    public static final int LOAD_TRAILERS = 1;
-    public static final int LOAD_REVIEWS = 2;
     @BindView(R.id.movie_title_tv) TextView tv_title;
     @BindView(R.id.movie_plot) TextView tv_movie_plot;
     @BindView(R.id.movie_release_date_tv) TextView tv_movie_release_date;
@@ -91,12 +84,12 @@ public class DetailActivity extends AppCompatActivity implements  MovieTrailerRe
         mvTrailerReviewList.setHasFixedSize(true);
         mvTrailerReviewList.setAdapter(mvTrailerReviewAdapter);
 
-        URL movieDetailReviews= NetworkUtils.buildUrlDetail(LOAD_TRAILERS,movieId);
-        URL movieDetailTrailers= NetworkUtils.buildUrlDetail(LOAD_REVIEWS,movieId);
+        URL movieDetailReviews= NetworkUtils.buildUrlDetail(Helpers.LOAD_TRAILERS,movieId);
+        URL movieDetailTrailers= NetworkUtils.buildUrlDetail(Helpers.LOAD_REVIEWS,movieId);
 
-        new MovieDetailQueryTask(LOAD_TRAILERS,movieTrailerAndReviewList, mvTrailerReviewAdapter).execute(movieDetailTrailers);
+        new MovieDetailQueryTask(Helpers.LOAD_TRAILERS,movieTrailerAndReviewList, mvTrailerReviewAdapter).execute(movieDetailTrailers);
 
-        new MovieDetailQueryTask(LOAD_REVIEWS,movieTrailerAndReviewList, mvTrailerReviewAdapter).execute(movieDetailReviews);
+        new MovieDetailQueryTask(Helpers.LOAD_REVIEWS,movieTrailerAndReviewList, mvTrailerReviewAdapter).execute(movieDetailReviews);
 
 
     }

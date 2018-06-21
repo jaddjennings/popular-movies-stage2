@@ -38,20 +38,7 @@ public class MovieDetailQueryTask extends AsyncTask<URL, Void, ArrayList<Object>
             e.printStackTrace();
         }
         if (MovieDetailResults != null && !MovieDetailResults.equals("")) {
-            switch(detailType) {
-
-                case 1: {
-                    movieReturnList.addAll(JsonUtils.getObjectsFromJson(MovieDetailResults, 1));
-                    break;
-                }
-                case 2: {
-                    movieReturnList.addAll(JsonUtils.getObjectsFromJson(MovieDetailResults, 2));
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }
+            movieReturnList.addAll(JsonUtils.getObjectsFromJson(MovieDetailResults, detailType));
         }
         return movieReturnList;
     }

@@ -37,25 +37,16 @@ public class JsonUtils {
 
             System.out.println(e.getMessage());
         }
-        if(objectType == 0)
-            return movieObjects;
-        else  if(objectType == 1)
-            return movieReviewObjects;
-        else
-            return movieTrailerObjects;
+
+        return   objectType == Helpers.LOAD_TRAILERS? movieTrailerObjects
+                :objectType == Helpers.LOAD_REVIEWS ? movieReviewObjects
+                :movieObjects;
     }
 
     private static void StoreResults(ArrayList<Object> listOfResults, int objectType)throws JSONException {
 
-            if(objectType == 0){
-                movieObjects = new ArrayList<Object>();
-                MovieObject m;
-                for (int i = 0; i<listOfResults.size();i++) {
-                    m = parseMovieObjectJson(listOfResults.get(i).toString());
-                    movieObjects.add(m);
-                }
-            }
-            else  if(objectType == 1) {
+
+            if(objectType == Helpers.LOAD_REVIEWS) {
                 movieReviewObjects = new ArrayList<Object>();
                 MovieReviewObject m;
                 for (int i = 0; i < listOfResults.size(); i++) {
@@ -63,7 +54,7 @@ public class JsonUtils {
                     movieReviewObjects.add(m);
                 }
             }
-            else{
+            else if(objectType == Helpers.LOAD_TRAILERS){
                 movieTrailerObjects = new ArrayList<Object>();
                 MovieTrailerObject m;
                 for (int i = 0; i < listOfResults.size(); i++) {
@@ -71,6 +62,14 @@ public class JsonUtils {
                     movieTrailerObjects.add(m);
                 }
              }
+            else{
+                movieObjects = new ArrayList<Object>();
+                MovieObject m;
+                for (int i = 0; i<listOfResults.size();i++) {
+                    m = parseMovieObjectJson(listOfResults.get(i).toString());
+                    movieObjects.add(m);
+                }
+            }
     }
 
     private static MovieTrailerObject parseMovieTrailerObjectJson(String json) throws  JSONException {

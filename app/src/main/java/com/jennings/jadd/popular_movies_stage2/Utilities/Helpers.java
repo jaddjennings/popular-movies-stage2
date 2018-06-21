@@ -15,6 +15,8 @@ public  class  Helpers {
     public static final int MOST_POP_SORT = 1;
     public static final String LIFECYCLE_CALLBACKS_SORT_MODE = "sort_mode";
     public static final String MOVIE_LIST_STATE_KEY = "movie_list_state_key";
+    public static final int LOAD_TRAILERS = 1;
+    public static final int LOAD_REVIEWS = 2;
 
     public static Uri getImgURI(Context inContext, Bitmap inImg){
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

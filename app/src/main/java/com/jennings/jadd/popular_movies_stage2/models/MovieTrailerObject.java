@@ -6,23 +6,23 @@ public class MovieTrailerObject {
     private String name;
 
     public MovieTrailerObject(String keyP, String nameP) {
-        setKey(keyP);
-        setName(nameP);
+        key = keyP;
+        name = nameP;
     }
 
     public String getKey() {
         return key;
     }
 
-    public void setKey(String id) {
-        this.key = key;
+    public void setKey(String keyP) {
+        this.key = keyP;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String nameP) {
         this.name = name;
     }
 }
